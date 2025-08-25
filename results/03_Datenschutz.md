@@ -1,5 +1,6 @@
 ## Datenschutz
 
+
 Datenschutz gibt es bereits seit ca. 1970, seitdem hat sich viel verändert. Die Welt wird zunehmend digitalisiert, wodurch auch die Wichtigkeit des Datenschutzes drastisch ansteigt. Vor allem wenn man persönliche Daten wie Namen oder Adressen verarbeitet und speichert. Die Datenschutz-Grundverordnung (DSGVO) gibt genau vor, welche Daten man nutzen darf, unter welchen Bedingungen das okay ist und wie man diese Daten sicher aufbewahren muss.
 
 Die Plattform verarbeitet personenbezogene Daten wie Name, Adresse, E-Mail, Telefonnummer, Geburtsdatum, Interessen und Hobbys. Besondere Daten, wie Geschlecht oder sexuelle Orientierung, gelten laut Artikel 9 DSGVO als sensibel und dürfen nur mit ausdrücklicher Einwilligung verarbeitet werden. Zudem werden technische Metadaten wie IP-Adressen und Zeitstempel erfasst, die gemäß Artikel 4 DSGVO als personenbezogene Daten gelten, da sie eine Identifizierung der betroffenen Person ermöglichen können. Ihre Verarbeitung ist nur unter den in Artikel 6 DSGVO genannten Bedingungen zulässig, beispielsweise zur Erfüllung eines Vertrags oder zur Wahrung berechtigter Interessen des Verantwortlichen.
