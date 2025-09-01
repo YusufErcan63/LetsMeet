@@ -1,61 +1,26 @@
 erDiagram
-    %% Entitäten mit alternativer Anordnung
-    INTEREST {
-        string interestID PK
-        string bezeichnung
-    }
+USER ||--o{ ADDRESS : wohnt_in
+USER ||--o{ HOBBY : hat
+USER ||--o{ FRIENDSHIP : ist_freund_mit
+USER ||--o{ LIKE : gibt_like
+USER ||--o{ MESSAGE : sendet_nachricht
+USER ||--o{ MESSAGE : erhält_nachricht
+USER ||--o{ HOBBY : bevorzugt
 
-    PERSON {
-        string personID PK
-        string fullName
-        string emailAdresse
-        string telefon
-        date geburtsdatum
-        string geschlecht
-    }
+ADDRESS {
+}
 
-    CHAT {
-        string chatID PK
-        string vonUserID FK
-        string anUserID FK
-        string nachrichtText
-        datetime gesendetAm
-    }
+HOBBY {
+}
 
-    LOCATION {
-        string locationID PK
-        string strasse
-        string stadt
-        string postleitzahl
-        string land
-    }
+FRIENDSHIP {
+}
 
-    REACTION {
-        string reactionID PK
-        string vonUserID FK
-        string anUserID FK
-        date zeitpunkt
-    }
+LIKE {
+}
 
-    CONNECTION {
-        string connectionID PK
-        string initiatorID FK
-        string partnerID FK
-        date seitDatum
-    }
+MESSAGE {
+}
 
-    %% Beziehungen in neuem Aufbau
-    PERSON ||--|| LOCATION : "wohnt_an"
-
-    INTEREST ||--|{ PERSON : "interessiert_sich_für"
-    PERSON ||--|{ INTEREST : "bevorzugt"
-
-    CONNECTION ||--|| PERSON : "verbindet"
-    PERSON ||--|| CONNECTION : "ist_verbunden_mit"
-
-    REACTION ||--|| PERSON : "erhält_reaktion"
-    PERSON ||--|| REACTION : "sendet_reaktion"
-
-    CHAT ||--|| PERSON : "empfängt_chat"
-    PERSON ||--|| CHAT : "sendet_chat"
+USER {
 
