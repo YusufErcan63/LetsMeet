@@ -1,17 +1,18 @@
 erDiagram
-USER ||--o{ ADDRESS : wohnt_in
-USER ||--o{ HOBBY : hat
-USER ||--o{ FRIENDSHIP : ist_freund_mit
-USER ||--o{ LIKE : gibt_like
-USER ||--o{ MESSAGE : sendet_nachricht
-USER ||--o{ MESSAGE : erhält_nachricht
-USER ||--o{ HOBBY : bevorzugt
+USER ||--o{ HOBBY : has
+USER ||--o{ ADDRESS : has
+USER ||--o{ FRIENDSHIP : friends
+USER ||--o{ LIKE : likes
+USER ||--o{ MESSAGE : sends
+USER ||--o{ MESSAGE : receives 
+USER ||--o{ HOBBY : prefers
+
+HOBBY {
+}
 
 ADDRESS {
 }
 
-HOBBY {
-}
 
 FRIENDSHIP {
 }
