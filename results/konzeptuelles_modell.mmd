@@ -1,0 +1,60 @@
+erDiagram
+    %% Entitäten mit alternativer Anordnung
+    INTEREST {
+        string interestID PK
+        string bezeichnung
+    }
+
+    PERSON {
+        string personID PK
+        string fullName
+        string emailAdresse
+        string telefon
+        date geburtsdatum
+        string geschlecht
+    }
+
+    CHAT {
+        string chatID PK
+        string vonUserID FK
+        string anUserID FK
+        string nachrichtText
+        datetime gesendetAm
+    }
+
+    LOCATION {
+        string locationID PK
+        string strasse
+        string stadt
+        string postleitzahl
+        string land
+    }
+
+    REACTION {
+        string reactionID PK
+        string vonUserID FK
+        string anUserID FK
+        date zeitpunkt
+    }
+
+    CONNECTION {
+        string connectionID PK
+        string initiatorID FK
+        string partnerID FK
+        date seitDatum
+    }
+
+    %% Beziehungen in neuem Aufbau
+    PERSON ||--|| LOCATION : "wohnt_an"
+
+    INTEREST ||--|{ PERSON : "interessiert_sich_für"
+    PERSON ||--|{ INTEREST : "bevorzugt"
+
+    CONNECTION ||--|| PERSON : "verbindet"
+    PERSON ||--|| CONNECTION : "ist_verbunden_mit"
+
+    REACTION ||--|| PERSON : "erhält_reaktion"
+    PERSON ||--|| REACTION : "sendet_reaktion"
+
+    CHAT ||--|| PERSON : "empfängt_chat"
+    PERSON ||--|| CHAT : "sendet_chat"
