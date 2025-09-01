@@ -48,6 +48,3 @@ Recht auf Berichtigung falscher Informationen
 
 Recht auf Löschung der Daten
 
-Fazit
-
-Datenschutz ist nicht nur eine rechtliche Pflicht, sondern ein zentraler Bestandteil verantwortungsvoller Datenverwaltung. Die DSGVO sorgt dafür, dass personenbezogene Informationen transparent, sicher und gesetzeskonform verarbeitet werden und stärkt das Vertrauen der Nutzer.
