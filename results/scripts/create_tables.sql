@@ -20,6 +20,7 @@ CREATE Table Hobby(
     hobbyname Varchar (50) NOT NULL
 )
 
+    
 
 CREATE Table user_hobby(
     user_hobby_ID int NOT NULL primary key,
