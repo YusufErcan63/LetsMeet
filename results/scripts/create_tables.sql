@@ -58,5 +58,4 @@ CREATE Table Friendship_Message(
     foreign key (message_ID) references (user_ID)
     prio int (3)
     timestamp datetime
-    
 )
