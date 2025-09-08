@@ -51,3 +51,12 @@ CREATE Table Message(
     message_body text,
     timestamp datetime
 )
+
+CREATE Table Friendship_Message(
+    friendship_message_ID int NOT NULL primary key,
+    foreign key (friendship_ID) references (user_ID)
+    foreign key (message_ID) references (user_ID)
+    prio int (3)
+    timestamp datetime
+    
+)
