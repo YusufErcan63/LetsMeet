@@ -14,6 +14,7 @@ CREATE Table User(
     city Varchar (50)
 )
 
+    
 CREATE Table Hobby(
     hobby_ID int NOT NULL primary key,
     hobbyname Varchar (50) NOT NULL
