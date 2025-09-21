@@ -3,7 +3,7 @@ import psycopg2
 import random
 from typing import Optional, Tuple
 
-# (Konfiguration der PostgreSQL-Datenbank)
+#Konfiguration der PostgreSQL-Datenbank
 DB_HOST = "localhost"
 DB_NAME = "lf8_lets_meet_db"
 DB_USER = "user"
@@ -13,7 +13,7 @@ def get_or_create_user(email: str, full_name: str, conn) -> int:
     #Findet oder erstellt einen Benutzer basierend auf der E-Mail-Adresse und gibt die user_id zurück
     
     with conn.cursor() as cur:
-        # Prüfen, ob der Benutzer bereits existiert
+        # Prüft, ob der Benutzer bereits existiert
         cur.execute("SELECT user_id FROM users WHERE email = %s", (email,))
         user = cur.fetchone()
 
@@ -27,7 +27,7 @@ def get_or_create_user(email: str, full_name: str, conn) -> int:
             first_name = full_name.strip()
             last_name = "Platzhalter"  # (Falls kein Nachname vorhanden ist)
 
-        # Neuen Benutzer in die 'users'-Tabelle einfügen, passend zu deinem Modell
+        # Neuen Benutzer in die 'users'-Tabelle einfügen
         cur.execute(
             """
             INSERT INTO users (first_name, last_name, email)
@@ -44,14 +44,14 @@ def insert_hobby_if_not_exists(hobby_name: str, conn) -> int:
     #Prüft, ob ein Hobby existiert, fügt es ggf. hinzu und gibt die hobby_id zurück
     
     with conn.cursor() as cur:
-        #Prüfen, ob das Hobby existiert)
+        #Prüfen, ob das Hobby existiert
         cur.execute("SELECT hobby_id FROM hobby WHERE hobby_name = %s", (hobby_name,))
         hobby = cur.fetchone()
 
         if hobby:
             return hobby[0]
 
-        # (Neues Hobby hinzufügen, passend zu deinem Modell)
+        # Neues Hobby hinzufügen
         cur.execute("INSERT INTO hobby (hobby_name) VALUES (%s) RETURNING hobby_id", (hobby_name,))
         hobby_id = cur.fetchone()[0]
 
@@ -65,7 +65,7 @@ def insert_user_hobbies(user_id: int, hobbies: list[str], conn):
         for hobby_name in hobbies:
             hobby_id = insert_hobby_if_not_exists(hobby_name, conn)
 
-            #Prüfen, ob die Beziehung bereits existiert
+            #Prüft, ob die Beziehung bereits existiert
             cur.execute(
                 "SELECT 1 FROM user_hobby WHERE user_id = %s AND hobby_id = %s",
                 (user_id, hobby_id),
