@@ -10,25 +10,24 @@ DB_USER = "user"
 DB_PASS = "secret"
 
 def get_or_create_user(email: str, full_name: str, conn) -> int:
-    """
-    (Findet oder erstellt einen Benutzer basierend auf der E-Mail-Adresse und gibt die user_id zurück)
-    """
+    #Findet oder erstellt einen Benutzer basierend auf der E-Mail-Adresse und gibt die user_id zurück
+    
     with conn.cursor() as cur:
-        # (Prüfen, ob der Benutzer bereits existiert)
+        # Prüfen, ob der Benutzer bereits existiert
         cur.execute("SELECT user_id FROM users WHERE email = %s", (email,))
         user = cur.fetchone()
 
         if user:
             return user[0]
 
-        # (Namen aufteilen)
+        # Namen aufteilen
         if "," in full_name:
             last_name, first_name = map(str.strip, full_name.split(",", 1))
         else:
             first_name = full_name.strip()
             last_name = "Platzhalter"  # (Falls kein Nachname vorhanden ist)
 
-        # (Neuen Benutzer in die 'users'-Tabelle einfügen, passend zu deinem Modell)
+        # Neuen Benutzer in die 'users'-Tabelle einfügen, passend zu deinem Modell
         cur.execute(
             """
             INSERT INTO users (first_name, last_name, email)
@@ -42,11 +41,10 @@ def get_or_create_user(email: str, full_name: str, conn) -> int:
         return user_id
 
 def insert_hobby_if_not_exists(hobby_name: str, conn) -> int:
-    """
-    (Prüft, ob ein Hobby existiert, fügt es ggf. hinzu und gibt die hobby_id zurück)
-    """
+    #Prüft, ob ein Hobby existiert, fügt es ggf. hinzu und gibt die hobby_id zurück
+    
     with conn.cursor() as cur:
-        # (Prüfen, ob das Hobby existiert)
+        #Prüfen, ob das Hobby existiert)
         cur.execute("SELECT hobby_id FROM hobby WHERE hobby_name = %s", (hobby_name,))
         hobby = cur.fetchone()
 
@@ -61,14 +59,13 @@ def insert_hobby_if_not_exists(hobby_name: str, conn) -> int:
         return hobby_id
 
 def insert_user_hobbies(user_id: int, hobbies: list[str], conn):
-    """
-    (Fügt die Beziehungen zwischen dem Benutzer und seinen Hobbys in die user_hobby-Tabelle ein)
-    """
+    #Fügt die Beziehungen zwischen dem Benutzer und seinen Hobbys in die user_hobby-Tabelle ein
+    
     with conn.cursor() as cur:
         for hobby_name in hobbies:
             hobby_id = insert_hobby_if_not_exists(hobby_name, conn)
 
-            # (Prüfen, ob die Beziehung bereits existiert)
+            #Prüfen, ob die Beziehung bereits existiert
             cur.execute(
                 "SELECT 1 FROM user_hobby WHERE user_id = %s AND hobby_id = %s",
                 (user_id, hobby_id),
