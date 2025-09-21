@@ -2,13 +2,13 @@ import pandas as pd
 import psycopg2
 from datetime import datetime
 
-# (Konfiguration für die PostgreSQL-Datenbankverbindung)
+# Konfiguration für die PostgreSQL-Datenbankverbindung
 DB_HOST = "localhost"
 DB_NAME = "lf8_lets_meet_db"
 DB_USER = "user"
 DB_PASS = "secret"
 
-# (Pfad zur Excel-Datei)
+# Pfad zur Excel-Datei
 EXCEL_FILE_PATH = "/workspace/LetsMeet/Lets Meet DB Dump.xlsx"
 
 def parse_name(full_name):
@@ -53,7 +53,7 @@ def parse_birthday(birth_date):
         return None
 
 def parse_hobbies(hobbies_str):
-    #Funktion, um Hobbys und deren Priorität aus dem String 'Hobby1%Prio;Hobby2%Prio;...' zu extrahieren.
+    #Funktion, um Hobbys und deren Priorität aus dem String zu extrahieren.
     
     if not hobbies_str or not isinstance(hobbies_str, str):
         return []
@@ -79,7 +79,7 @@ def main():
     cursor = None
 
     try:
-        # (Verbindung zur PostgreSQL-Datenbank herstellen)
+        #Verbindung zur PostgreSQL-Datenbank herstellen
         conn = psycopg2.connect(
             host=DB_HOST,
             dbname=DB_NAME,
@@ -90,15 +90,15 @@ def main():
         cursor = conn.cursor()
         print("Verbindung zu PostgreSQL erfolgreich hergestellt.")
 
-        # (Liest die Excel-Datei in einen pandas DataFrame)
+        # Liest die Excel-Datei in einen pandas DataFrame
         df = pd.read_excel(EXCEL_FILE_PATH)
         df.columns = df.columns.str.strip()
         print("Excel-Datei erfolgreich gelesen.")
 
-        # (Durchläuft über jede Zeile des DataFrames)
+        # Durchläuft über jede Zeile des DataFrames
         for index, row in df.iterrows():
             try:
-                # (Extrahiert Daten aus der aktuellen Zeile)
+                # Extrahiert Daten aus der aktuellen Zeile
                 full_name = row.get('Nachname, Vorname')
                 last_name, first_name = parse_name(full_name)
                 
@@ -117,12 +117,12 @@ def main():
                 hobbies_str = row.get('Hobbys')
                 hobbies = parse_hobbies(hobbies_str)
 
-                # (Prüft, ob der Benutzer bereits in der users-Tabelle existiert)
+                # Prüft, ob der Benutzer bereits in der users-Tabelle existiert
                 cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
                 existing_user = cursor.fetchone()
 
                 if existing_user:
-                    # (Wenn der Benutzer existiert, werden seine Daten aktualisert)
+                    # Wenn der Benutzer existiert, werden seine Daten aktualisert
                     user_id = existing_user[0]
                     update_users_sql = """
                        UPDATE users
@@ -139,10 +139,10 @@ def main():
                         user_id
                     ))
                     conn.commit()
-                    # (zur nächsten Zeile, da der Benutzer bereits vorhanden ist)
+                    # zur nächsten Zeile, da der Benutzer bereits vorhanden ist
                     continue
 
-                # (Wenn der Benutzer nicht existiert, fügt ihn neu ein)
+                # Wenn der Benutzer nicht existiert, fügt ihn neu ein
                 insert_user_sql = """
                     INSERT INTO users (first_name, last_name, email, gender, interested_in, birth_date, created_at)
                     VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP)
@@ -158,20 +158,20 @@ def main():
                 ))
                 user_id = cursor.fetchone()[0]
 
-                # (Fügt Hobbys in die 'hobby' und 'user_hobby' Tabellen ein)
+                # Fügt Hobbys in die 'hobby' und 'user_hobby' Tabellen ein
                 for (hobby_name, prio) in hobbies:
-                    # (Prüfe, ob das Hobby schon existiert)
+                    # Prüft, ob das Hobby schon existiert
                     cursor.execute("SELECT hobby_id FROM hobby WHERE hobby_name = %s", (hobby_name,))
                     row_hobby = cursor.fetchone()
                     if row_hobby:
                         hobby_id = row_hobby[0]
                     else:
-                        # (Wenn nicht, fügt das Hobby hinzu)
+                        # Wenn nicht, fügt das Hobby hinzu
                         cursor.execute("INSERT INTO hobby (hobby_name) VALUES (%s) RETURNING hobby_id",
                                        (hobby_name,))
                         hobby_id = cursor.fetchone()[0]
 
-                    # (Fügt die Beziehung zwischen Benutzer und Hobby in die user_hobby Tabelle ein)
+                    # Fügt die Beziehung zwischen Benutzer und Hobby in die user_hobby Tabelle ein
                     cursor.execute("""
                         INSERT INTO user_hobby (user_id, hobby_id, priority)
                         VALUES (%s, %s, %s) ON CONFLICT (user_id, hobby_id) DO UPDATE SET priority = EXCLUDED.priority
