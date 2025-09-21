@@ -144,5 +144,4 @@ for mongo_user in mongo_collection.find():
 conn.commit()
 cursor.close()
 conn.close()
-
 print("Datenimport aus MongoDB abgeschlossen!")
