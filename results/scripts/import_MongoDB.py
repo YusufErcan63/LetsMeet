@@ -3,18 +3,18 @@ from pymongo import MongoClient
 import random
 import string
 
-# PostgreSQL connection setup
+# PostgreSQL Verbindunng
 DB_HOST = "localhost"
 DB_NAME = "lf8_lets_meet_db"
 DB_USER = "user"
 DB_PASS = "secret"
 
-# MongoDB connection setup
+# MongoDB Verbindung
 mongo_client = MongoClient("mongodb://localhost:27017/")
 mongo_db = mongo_client["LetsMeet"]
 mongo_collection = mongo_db["users"]
 
-# Connect to PostgreSQL
+# Verbindung zu PostgreSQL
 conn = psycopg2.connect(
     host=DB_HOST,
     dbname=DB_NAME,
@@ -23,11 +23,11 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
-# Function to generate a random string for password_hash
+# Funktion zur Generierung eines zufälligen Strings für den password_hash 
 def generate_random_string(length=16):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
-# Iterate over MongoDB users and process data
+# MongoDB-Benutzer durchlaufen und Daten verarbeiten
 for mongo_user in mongo_collection.find():
 
     # (Datenextraktion aus MongoDB)
@@ -49,7 +49,7 @@ for mongo_user in mongo_collection.find():
         print(f"Benutzer mit E-Mail {user_email} existiert bereits. Daten werden aktualisiert.")
         user_id = existing_user[0]
     else:
-        # (Einfügen in die 'users' Tabelle deines logischen Datenmodells)
+        # (Einfügen in die 'users' Tabelle)
         cursor.execute("""
             INSERT INTO users (first_name, last_name, email, phone, gender, interested_in, birth_date, created_at, updated_at)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING user_id
@@ -66,7 +66,7 @@ for mongo_user in mongo_collection.find():
 
     # (Verarbeitung der Hobbys und Einfügen in die 'user_hobby' Tabelle)
     for hobby_name in mongo_user.get("hobbies", []):
-        # (Finde die hobby_id aus der 'hobby' Tabelle oder füge es neu ein)
+        # (Findet die hobby_id aus der 'hobby' Tabelle oder fügt es neu ein)
         cursor.execute("SELECT hobby_id FROM hobby WHERE hobby_name = %s", (hobby_name,))
         hobby_id_result = cursor.fetchone()
         if hobby_id_result:
@@ -84,12 +84,12 @@ for mongo_user in mongo_collection.find():
 
     # (Verarbeitung der Freundschaften und Einfügen in die 'friends' Tabelle)
     for friend_email in mongo_user.get("friends", []):
-        # (Hole die user_id des Freundes)
+        # (Holt die user_id des Freundes)
         cursor.execute("SELECT user_id FROM users WHERE email = %s", (friend_email,))
         friend_user_id = cursor.fetchone()
         if friend_user_id:
             friend_user_id = friend_user_id[0]
-            # (Stelle sicher, dass user_id < friend_user_id ist, um Duplikate zu vermeiden)
+            # (Stellt sicher, dass user_id < friend_user_id ist, um Duplikate zu vermeiden)
             if user_id < friend_user_id:
                 cursor.execute("""
                     INSERT INTO friends (user_id, friend_user_id)
@@ -107,7 +107,7 @@ for mongo_user in mongo_collection.find():
         status = like["status"]
         timestamp = like["timestamp"]
         
-        # (Hole die user_id des gelikten Benutzers)
+        # (Holt die user_id des gelikten Benutzers)
         cursor.execute("SELECT user_id FROM users WHERE email = %s", (liked_email,))
         liked_user_id_result = cursor.fetchone()
 
@@ -127,7 +127,7 @@ for mongo_user in mongo_collection.find():
         message_text = message["message"]
         timestamp = message["timestamp"]
 
-        # (Hole die user_id des Empfängers)
+        # (Holt die user_id des Empfängers)
         cursor.execute("SELECT user_id FROM users WHERE email = %s", (receiver_email,))
         receiver_user_id_result = cursor.fetchone()
 
